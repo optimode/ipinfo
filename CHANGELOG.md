@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-03-11
+
 ### Added
 
 - IP geolocation lookup via ip-api.com Pro API
@@ -17,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - config via `/etc/ipinfo/config.yaml` and `IPINFO_` env vars
 - cross-platform builds (linux/darwin, amd64/arm64)
 - GitHub Actions CI/CD with artifact upload and release
+- one-liner install script (`deployments/install.sh`)
