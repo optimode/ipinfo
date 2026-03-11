@@ -4,17 +4,31 @@ IP geolocation CLI tool using the [ip-api.com](https://ip-api.com) Pro API.
 
 ## Installation
 
+### Quick install (Linux/macOS)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/optimode/ipinfo/main/deployments/install.sh | bash
+```
+
+Install a specific version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/optimode/ipinfo/main/deployments/install.sh | bash -s v0.1.0
+```
+
+### Go install
+
 ```bash
 go install github.com/optimode/ipinfo@latest
 ```
 
-Or build from source:
+### Build from source
 
 ```bash
-git clone ...
+git clone git@github.com:optimode/ipinfo.git
 cd ipinfo
-go build -o ipinfo .
-sudo mv ipinfo /usr/local/bin/
+make build
+sudo mv bin/ipinfo /usr/local/bin/
 ```
 
 ## Configuration

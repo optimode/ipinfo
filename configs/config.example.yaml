@@ -1,0 +1,8 @@
+# ipinfo configuration
+# Copy to /etc/ipinfo/config.yaml and edit
+
+# ip-api.com Pro API key (required)
+api_key: "your_key_here"
+
+# Number of parallel API requests (default: 5)
+concurrency: 5
