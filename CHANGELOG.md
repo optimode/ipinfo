@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-03-11
+
+### Added
+
+- `--version` flag with version, git commit, and build time injected at build time
+- remove duplicate empty IP check in run function
+
 ## [0.2.0] - 2026-03-11
 
 ### Added

@@ -37,6 +37,11 @@ Examples:
 	RunE: run,
 }
 
+// SetVersionInfo sets the version string displayed by --version.
+func SetVersionInfo(version, commit, buildTime string) {
+	rootCmd.Version = fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, buildTime)
+}
+
 // Execute runs the root command.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
@@ -132,10 +137,6 @@ func run(cmd *cobra.Command, args []string) error {
 
 	if len(ips) == 0 {
 		return fmt.Errorf("no input: provide IPs as arguments, --file, or via stdin pipe")
-	}
-
-	if len(ips) == 0 {
-		return fmt.Errorf("no IPs to process")
 	}
 
 	// Setup
