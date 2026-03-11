@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-03-11
+
+### Added
+
+- `-s` flag as shorthand for `--format summary`
+- combine all input sources (cli args, `--file`, stdin) instead of mutually exclusive
+
+### Fixed
+
+- GitHub Actions workflow triggered twice on push (now only on tags and PRs)
+
 ## [0.1.0] - 2026-03-11
 
 ### Added
