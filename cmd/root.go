@@ -185,7 +185,6 @@ func processIP(ip string, client *api.Client, printer *format.Printer, subnetCac
 	if subnetCache != nil {
 		key := cache.Key(ip)
 		if cached := subnetCache.Get(ip, key); cached != nil {
-			fmt.Fprintf(os.Stderr, "(cached: %s → %s.x/24)\n", ip, key)
 			printer.Print(cached)
 			return
 		}
