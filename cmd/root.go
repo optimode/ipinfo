@@ -15,6 +15,7 @@ import (
 
 var (
 	flagFormat      string
+	flagSummary     bool
 	flagFile        string
 	flagAPIKey      string
 	flagConcurrency int
@@ -28,9 +29,11 @@ var rootCmd = &cobra.Command{
 
 Examples:
   ipinfo 8.8.8.8 1.1.1.1
-  ipinfo --format csv 8.8.8.8
+  ipinfo -s 8.8.8.8
+  echo "8.8.8.8" | ipinfo -s
   cat ips.txt | ipinfo --format table
-  ipinfo --file ips.txt --format summary`,
+  grep 'login' /var/log/mail.log | awk '{print $7}' | sort -u | ipinfo -s
+  ipinfo --file ips.txt --format csv`,
 	RunE: run,
 }
 
@@ -46,6 +49,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&flagFormat, "format", "f", "table",
 		"Output format: table, summary, json, csv")
+	rootCmd.PersistentFlags().BoolVarP(&flagSummary, "summary", "s", false,
+		"Shorthand for --format summary")
 	rootCmd.PersistentFlags().StringVar(&flagFile, "file", "",
 		"Input file with one IP per line")
 	rootCmd.PersistentFlags().StringVar(&flagAPIKey, "api-key", "",
@@ -91,6 +96,11 @@ func run(cmd *cobra.Command, args []string) error {
 		concurrency = 5
 	}
 
+	// -s is shorthand for --format summary
+	if flagSummary {
+		flagFormat = format.FormatSummary
+	}
+
 	// Validate format
 	switch flagFormat {
 	case format.FormatTable, format.FormatSummary, format.FormatJSON, format.FormatCSV:
@@ -98,25 +108,30 @@ func run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid format %q, must be one of: table, summary, json, csv", flagFormat)
 	}
 
-	// Collect IPs
+	// Collect IPs from all available sources
 	var ips []string
-	switch {
-	case len(args) > 0:
-		ips = args
-	case flagFile != "":
+
+	// CLI arguments
+	ips = append(ips, args...)
+
+	// --file flag
+	if flagFile != "" {
 		f, err := os.Open(flagFile)
 		if err != nil {
 			return fmt.Errorf("cannot open file: %w", err)
 		}
 		defer f.Close()
-		ips = input.FromReader(f)
-	default:
-		// stdin
-		stat, _ := os.Stdin.Stat()
-		if (stat.Mode() & os.ModeCharDevice) != 0 {
-			return fmt.Errorf("no input: provide IPs as arguments, --file, or via stdin pipe")
-		}
-		ips = input.FromReader(os.Stdin)
+		ips = append(ips, input.FromReader(f)...)
+	}
+
+	// stdin/pipe (always read if available)
+	stat, _ := os.Stdin.Stat()
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		ips = append(ips, input.FromReader(os.Stdin)...)
+	}
+
+	if len(ips) == 0 {
+		return fmt.Errorf("no input: provide IPs as arguments, --file, or via stdin pipe")
 	}
 
 	if len(ips) == 0 {
